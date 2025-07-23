@@ -1,21 +1,43 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
 function isTokenExpired(token: string) {
-    const { exp } : {exp: number} = jwtDecode(token);
-    console.log('exp', new Date(exp * 1000))
-    return Date.now() >= exp * 1000; 
+  try {
+    const { exp }: { exp: number } = jwtDecode(token);
+    return Date.now() >= exp * 1000;
+  } catch (err) {
+    return true; // If decode fails, treat as expired
+  }
 }
 
-export default function PrivateRoute({children}: {children: ReactNode}) {
-    const userInfo = JSON.parse(localStorage.getItem('coco-auth'));
+export default function PrivateRoute({ children }: { children: ReactNode }) {
+  const [isAuthorized, setIsAuthorized] = useState<null | boolean>(null);
 
-    if (!userInfo?.token) {
-        return <Navigate to='/login' />;
-    } else if (isTokenExpired(userInfo.token)) {
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('coco-auth');
+      if (!raw) {
+        setIsAuthorized(false);
+        return;
+      }
+
+      const userInfo = JSON.parse(raw);
+      if (!userInfo?.token || isTokenExpired(userInfo.token)) {
         localStorage.removeItem('coco-auth');
-        return <Navigate to='/login' />
+        setIsAuthorized(false);
+        return;
+      }
+
+      setIsAuthorized(true);
+    } catch (err) {
+      setIsAuthorized(false);
     }
-    return children;
+  }, []);
+
+  if (isAuthorized === null) return null; // Optional: show loading spinner here
+  if (!isAuthorized) return <Navigate to="/login" replace />;
+  return <>{children}</>;
 }
