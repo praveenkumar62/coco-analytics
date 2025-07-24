@@ -2,12 +2,13 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Login from './pages/Login';
 import { NotyProvider } from './context/NotyContext';
 import Dashboard from './pages/Dashboard';
-import PrivateRoute from './components/private-route';
 import Sidebar from './components/sidebar';
 import type { ReactNode } from 'react';
 import CocoList from './pages/CocoList';
 import UsersList from './pages/UsersList';
 import { UserProvider } from './context/UserContext';
+import PrivateRoute from './components/private-route';
+import AuthRedirect from './components/auth-redirect';
 
 function AppLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
@@ -28,6 +29,7 @@ function App() {
         <UserProvider>
           <AppLayout>
             <Routes>
+              <Route path="/" element={<AuthRedirect />} />
               <Route path="/login" element={<Login />} />
               <Route
                 path="/dashboard"
