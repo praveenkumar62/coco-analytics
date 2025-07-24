@@ -129,7 +129,7 @@ export default function CocoList() {
   ];
 
   function getCocoList() {
-    axios.get(`/api/product/${userInfo.id}/list`)
+    axios.get(`${import.meta.env.VITE_API_URL}/api/product/${userInfo.id}/list`)
       .then((res) => setProductData(res?.data?.data))
       .catch((err) => handleNoty(err?.response?.data?.message, 'error'))
   }
@@ -139,7 +139,7 @@ export default function CocoList() {
   }, []);
 
   const handleDelete = () => {
-    axios.delete(`/api/product/delete/${deleteCocoId}`)
+    axios.delete(`${import.meta.env.VITE_API_URL}/api/product/delete/${deleteCocoId}`)
       .then((res) => {
         handleNoty(res?.data?.message, 'success');
         getCocoList();

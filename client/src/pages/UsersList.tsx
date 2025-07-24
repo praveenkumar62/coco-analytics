@@ -67,7 +67,7 @@ export default function UsersList() {
 
   const getUsersList = () => {
     axios
-      .get("/api/users/list")
+      .get(`${import.meta.env.VITE_API_URL}/api/users/list`)
       .then((res) => setUsersData(res?.data?.data))
       .catch((err) =>
         handleNoty(err?.message || "Error in fetching users", "error"),
@@ -75,7 +75,7 @@ export default function UsersList() {
   };
 
   const handleDelete = () => {
-    axios.delete(`/api/users/${deleteUser.id}`)
+    axios.delete(`${import.meta.env.VITE_API_URL}/api/users/${deleteUser.id}`)
       .then((res) => handleNoty(res?.data?.message, 'success'))
       .catch((err) => handleNoty(err?.message, 'error'))
       .finally(() => {

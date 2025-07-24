@@ -57,7 +57,7 @@ export default function AddEditUser({
   const handleSave = () => {
     if (!userDetails)
       axios
-        .post("/api/auth/register", {
+        .post(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
           name: user.name,
           username: user.username,
           phone: user.phone,
@@ -72,7 +72,7 @@ export default function AddEditUser({
           handleNoty(res.response.data.message, "error");
         });
     else 
-      axios.patch(`/api/users/${userDetails.id}`, {
+      axios.patch(`${import.meta.env.VITE_API_URL}/api/users/${userDetails.id}`, {
         name: user.name,
         username: user.username,
         phone: user.phone,

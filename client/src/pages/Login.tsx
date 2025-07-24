@@ -15,7 +15,7 @@ export default function Login() {
 
   const handleLogin = () => {
     axios
-      .post('/api/auth/login', userDetails)
+      .post(`${import.meta.env.VITE_API_URL}/api/auth/login`, userDetails)
       .then((res) => {
         if (res?.data?.token) {
           const info = {
