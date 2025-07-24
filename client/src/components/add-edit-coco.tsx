@@ -58,7 +58,7 @@ export default function AddEditCoco({editCocoDetails, onClose, onSuccess}: IProp
   }
 
   const handleSave = () => {
-    if (productDetails) {
+    if (editCocoDetails) {
       axios.put(`${import.meta.env.VITE_API_URL}/api/product/update/${editCocoDetails.id}`, productDetails) 
       .then((res) => {
         handleNoty(res?.data?.message, 'success');
@@ -66,6 +66,7 @@ export default function AddEditCoco({editCocoDetails, onClose, onSuccess}: IProp
         })
         .catch((err) => handleNoty(err.response.data.message, 'error'));
     } else {
+      console.log('new save')
       axios.post(`${import.meta.env.VITE_API_URL}/api/product/save/${userInfo.id}`, productDetails)
         .then((res) => {
           handleNoty(res?.data?.message, 'success');
