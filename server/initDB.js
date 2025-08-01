@@ -32,8 +32,8 @@ const createProductsTable = `
         coco_taken DATE,
         old_coco INT,
         new_coco INT,
-        old_coco_cost INT,
-        new_coco_cost INT
+        old_coco_cost DECIMAL(10, 2),
+        new_coco_cost DECIMAL(10, 2)
     )
 `;
 
