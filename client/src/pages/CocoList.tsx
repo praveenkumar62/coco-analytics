@@ -9,6 +9,7 @@ import { useUserInfo } from "../context/UserContext";
 import EditIcon from '../assets/edit-pen.png';
 import DeleteIcon from '../assets/delete.png';
 import DeletePopup from "../components/delete-popup";
+import { roundingOff } from "../components/utils";
 
 export interface ICocoDetails {
   pickDate: string;
@@ -65,7 +66,7 @@ export default function CocoList() {
         const { old_coco_cost, old_coco } = row;
         return (
         <div>
-          {old_coco_cost * old_coco}&nbsp; 
+          {roundingOff(old_coco_cost * old_coco)}&nbsp; 
           {old_coco_cost > 0 && <span className="font-bold">({old_coco_cost}/p)</span>}
         </div>
       )}
