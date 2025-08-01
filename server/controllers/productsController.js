@@ -41,6 +41,15 @@ const editProduct = (req, res) => {
   })
 }
 
+const viewProduct = (req, res) => {
+  const id = req.params.id;
+  db.query(`SELECT * FROM products where user_id = ?`, [id], (err, result) => {
+    if (err) return res.status(400).json({ message: 'Failed to view product', error: err });
+    const final = result.sort((a, b) => (a.coco_taken - b.coco_taken))
+    return res.status(200).json({ data: final });
+  })
+}
+
 const deleteProduct = (req, res) => {
   const productId = req.params.id;
   db.query("DELETE from products WHERE id = ?", [productId], (err, result) => {
@@ -50,4 +59,4 @@ const deleteProduct = (req, res) => {
   })
 }
 
-module.exports = { saveProduct, listProducts, deleteProduct, editProduct };
+module.exports = { saveProduct, listProducts, deleteProduct, editProduct, viewProduct };

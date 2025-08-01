@@ -61,6 +61,14 @@ export default function CocoList() {
     {
       accessor: "old_coco_cost",
       header: "Old Coconut Cost",
+      cell: (row) => {
+        const { old_coco_cost, old_coco } = row;
+        return (
+        <div>
+          {old_coco_cost * old_coco}&nbsp; 
+          {old_coco_cost > 0 && <span className="font-bold">({old_coco_cost}/p)</span>}
+        </div>
+      )}
     },
     {
       accessor: "new_coco",
@@ -69,6 +77,14 @@ export default function CocoList() {
     {
       accessor: "new_coco_cost",
       header: "New Coconut Cost",
+      cell: (row) => {
+        const { new_coco_cost, new_coco } = row;
+        return (
+        <div>
+          {new_coco_cost * new_coco}&nbsp;
+          {new_coco_cost > 0 && <span className="font-bold">({new_coco_cost}p)</span>}
+        </div>
+      )}
     },
     {
       accessor: "total_coco",
@@ -84,9 +100,9 @@ export default function CocoList() {
       accessor: "total_cost",
       header: "Total Cost",
       cell: (row) => {
-        const { old_coco_cost, new_coco_cost} = row;
+        const { old_coco, old_coco_cost, new_coco, new_coco_cost} = row;
         return (
-          <div>{old_coco_cost + new_coco_cost}</div>
+          <div>{(old_coco_cost * old_coco) + (new_coco_cost * new_coco)}</div>
         )
       }
     },

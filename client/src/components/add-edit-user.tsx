@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { useNotyBlock } from "../context/NotyContext";
 
 export interface IUser {
@@ -36,6 +36,10 @@ function userReducer(state, action) {
   }
 }
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRegex = /^[6-9]\d{9}$/;
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^_-])[A-Za-z\d@$!%*#?&^_-]{8,}$/;
+
 export default function AddEditUser({
   onClose,
   onSuccess,
@@ -45,6 +49,18 @@ export default function AddEditUser({
 
   const [changePassword, setChangePassword] = useState<boolean>(false);
   const [user, userDispatch] = useReducer(userReducer, initialState);
+  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState<{
+    name: string;
+    username: string;
+    phone: string;
+    password: string;
+  }>({
+    name: '',
+    username: '',
+    phone: '',
+    password: '',
+  })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     userDispatch({
@@ -55,6 +71,14 @@ export default function AddEditUser({
   };
 
   const handleSave = () => {
+    const errorsObj = getErr();
+    const isNotValid = Object.values(errorsObj).some((item) => item);
+
+    if(isNotValid) {
+      setShowError(true);
+      return;
+    }
+
     if (!userDetails)
       axios
         .post(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
@@ -88,6 +112,23 @@ export default function AddEditUser({
         });
   };
 
+  const getErr = useCallback(() => {
+    const errObj = {
+      name: '',
+      username: '',
+      phone: '',
+      password: '',
+    };
+
+    errObj.name = user?.name?.length <= 100 ? '' : 'Should not exceed 100 characters';
+    errObj.name = user?.name?.length ? '' : 'Value is required';
+    errObj.username = emailRegex.test(user?.username) ? '' : 'Invalid email ID';
+    errObj.phone = phoneRegex.test(user?.phone) ? '' : 'Enter valid phone number';
+    errObj.password = passwordRegex.test(user?.newPassword) ? '' : 'Password must be 8+ characters, include a letter, a number, and a special character';
+    
+    return errObj;
+  }, [user, changePassword])
+
   useEffect(() => {
     if (userDetails) {
       const details = {
@@ -99,6 +140,13 @@ export default function AddEditUser({
       userDispatch({ type: "PRE_FIELDS", value: details });
     }
   }, [userDetails]);
+
+  useEffect(() => {
+    const err = getErr();
+    setError(err)
+  }, [getErr, user]);
+
+  console.log('e', error)
 
   return (
     <div className="bg-gray-700 fixed top-0 right-0 left-0 bottom-0 z-50 bg-opacity-60 backdrop-blur-sm transition-opacity flex justify-center items-center">
@@ -129,6 +177,7 @@ export default function AddEditUser({
               value={user.name}
               onChange={handleChange}
             />
+            {showError && error?.name && <div className="text-xs text-red-500">{error.name}</div>}
           </div>
           <div className="w-full sm:w-1/2 pb-4">
             <label
@@ -144,6 +193,7 @@ export default function AddEditUser({
               value={user.username}
               onChange={handleChange}
             />
+            {showError && error?.username && <div className="text-xs text-red-500">{error.username}</div>}
           </div>
         </section>
         <section className="block sm:flex gap-4">
@@ -161,6 +211,7 @@ export default function AddEditUser({
               value={user.phone}
               onChange={handleChange}
             />
+            {showError && error?.phone && <div className="text-xs text-red-500">{error.phone}</div>}
           </div>
           <div className="w-full sm:w-1/2 pb-4">
             {userDetails ? (
@@ -187,6 +238,7 @@ export default function AddEditUser({
                   value={user.newPassword}
                   onChange={handleChange}
                 />
+                {showError && error?.password && <div className="text-xs text-red-500">{error.password}</div>}
               </>
             )}
           </div>
@@ -222,6 +274,7 @@ export default function AddEditUser({
                 value={user?.newPassword}
                 onChange={handleChange}
               />
+              {showError && error?.password && <div className="text-xs text-red-500">{error.password}</div>}
             </div>
           </section>
         )}
