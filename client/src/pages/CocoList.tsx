@@ -34,6 +34,12 @@ export default function CocoList() {
     {
       accessor: "id",
       header: "ID",
+      cell: (row) => {
+        const { id } = row; 
+        return (
+          <div className="min-w-8">{id}</div>
+        )
+      }
     },
     {
       accessor: "coco_pick",
@@ -41,7 +47,7 @@ export default function CocoList() {
       cell: (row) => {
         const { coco_pick } = row;
         return (
-          <div>{DateTime.fromISO(coco_pick).toFormat('dd MMM yyyy')}</div>
+          <div className="min-w-28">{DateTime.fromISO(coco_pick).toFormat('dd MMM yyyy')}</div>
         )
       }
     },
@@ -51,13 +57,19 @@ export default function CocoList() {
       cell: (row) => {
         const { coco_taken } = row;
         return (
-          <div>{DateTime.fromISO(coco_taken).toFormat('dd MMM yyyy')}</div>
+          <div className="min-w-[122px]">{DateTime.fromISO(coco_taken).toFormat('dd MMM yyyy')}</div>
         )
       }
     },
     {
       accessor: "old_coco",
       header: "Old Coconut",
+      cell: (row) => {
+        const { old_coco } = row; 
+        return (
+          <div className="min-w-[106px]">{old_coco}</div>
+        )
+      }
     },
     {
       accessor: "old_coco_cost",
@@ -65,15 +77,21 @@ export default function CocoList() {
       cell: (row) => {
         const { old_coco_cost, old_coco } = row;
         return (
-        <div>
-          {roundingOff(old_coco_cost * old_coco)}&nbsp; 
-          {old_coco_cost > 0 && <span className="font-bold">({old_coco_cost}/p)</span>}
+        <div className="min-w-36">
+          ₹{roundingOff(old_coco_cost * old_coco)}&nbsp; 
+          {old_coco_cost > 0 && <span className="font-bold">(₹{old_coco_cost}/p)</span>}
         </div>
       )}
     },
     {
       accessor: "new_coco",
       header: "New Coconut",
+      cell: (row) => {
+        const { new_coco } = row; 
+        return (
+          <div className="min-w-[112px]">{new_coco}</div>
+        )
+      }
     },
     {
       accessor: "new_coco_cost",
@@ -81,9 +99,9 @@ export default function CocoList() {
       cell: (row) => {
         const { new_coco_cost, new_coco } = row;
         return (
-        <div>
-          {new_coco_cost * new_coco}&nbsp;
-          {new_coco_cost > 0 && <span className="font-bold">({new_coco_cost}p)</span>}
+        <div className="min-w-36">
+          ₹{roundingOff(new_coco_cost * new_coco)}&nbsp;
+          {new_coco_cost > 0 && <span className="font-bold">(₹{new_coco_cost}p)</span>}
         </div>
       )}
     },
@@ -93,7 +111,7 @@ export default function CocoList() {
       cell: (row) => {
         const { old_coco, new_coco} = row;
         return (
-          <div>{old_coco + new_coco}</div>
+          <div className="min-w-[110px]">{old_coco + new_coco}</div>
         )
       }
     },
@@ -103,7 +121,7 @@ export default function CocoList() {
       cell: (row) => {
         const { old_coco, old_coco_cost, new_coco, new_coco_cost} = row;
         return (
-          <div>{(old_coco_cost * old_coco) + (new_coco_cost * new_coco)}</div>
+          <div className="min-w-[100px]">₹{(old_coco_cost * old_coco) + (new_coco_cost * new_coco)}</div>
         )
       }
     },
@@ -116,7 +134,7 @@ export default function CocoList() {
           alt="edit"
           width={24}
           height={24}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", maxWidth: 24, marginRight: 10 }}
           onClick={() => setEditCoco({
             pickDate: DateTime.fromISO(row.coco_pick).toFormat('yyyy-MM-dd'),
             takenDate: DateTime.fromISO(row.coco_taken).toFormat('yyyy-MM-dd'),
@@ -138,7 +156,7 @@ export default function CocoList() {
           alt="delete"
           width={24}
           height={24}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", maxWidth: 24, marginRight: 10 }}
           onClick={() => setDeleteCocoId(row?.id)}
         />
       ),
@@ -168,8 +186,6 @@ export default function CocoList() {
       })
   }
 
-  console.log(productsData)
-
   return (
     <div className="p-4">
       <div className="flex justify-between items-center">
@@ -181,7 +197,9 @@ export default function CocoList() {
           Add New +
         </button>
       </div>
-      <Table columns={columns} rows={productsData} />
+      <div className="overflow-x-auto">
+        <Table columns={columns} rows={productsData} />
+      </div>
       {addCoco && (
         <AddEditCoco 
           onClose={() => setAddCoco(false)} 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { capitalize } from "lodash";
 import { DateTime } from "luxon";
 
@@ -53,7 +53,7 @@ export default function LineChartV1(props: IProps) {
               {DateTime.fromFormat(label, 'yyyy-MM-dd').toFormat('d MMM yyyy')}
             </p>
             {payload?.map((content) => (
-              <p className="my-1 text-sm">
+              <p className="my-1 text-sm" key={content.dataKey}>
                 {capitalize(content.dataKey)}: <span className="font-bold align-middle">{content.value}</span>
               </p>
             ))}
@@ -74,12 +74,13 @@ export default function LineChartV1(props: IProps) {
           bottom: 20,
         }}
       >
+        <CartesianGrid vertical={false} />
         <XAxis label={{ position: 'insideLeft' }} tickMargin={20} dataKey="date" tickLine={false} tick={{ fontSize: 12, stroke: '#999', strokeWidth: 0 }} />
         <YAxis tickLine={false} tickFormatter={yAxisFormatter} tick={{ fontSize: 12, stroke: '#999', strokeWidth: 0 }} />
         <Tooltip content={customTooltip} />
         <Legend content={renderCustomLegend} wrapperStyle={{ position: 'absolute', bottom: 5 }} />
         {keys.map((key, index: number) => (
-          <Line type="monotone" dataKey={key} stroke={colorCode[index] || "#8884d8"} />
+          <Line key={index} dataKey={key} stroke={colorCode[index] || "#8884d8"} />
         ))}
       </LineChart>
     </ResponsiveContainer>

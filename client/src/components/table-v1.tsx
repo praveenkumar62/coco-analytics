@@ -16,21 +16,21 @@ export default function Table(props: IProps) {
   const { columns, rows } = props;
   return (
     <div>
-      <table className="w-full">
-        <thead>
+      <table className="w-full border-0">
+        <thead className="border border-[#9ca3af73]">
           <tr>
             {columns.map((item) => (
-              <th className="border text-left p-2 text-sm" key={item.accessor}>
+              <th className="text-left p-2 text-sm border-0" key={item.accessor}>
                 {item.header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="border border-t-0 border-[#9ca3af73]">
           {rows.map((row: any, index: number) => (
             <tr key={index}>
               {columns.map((col) => (
-                <td className="border p-2 text-sm" key={col.accessor}>
+                <td className="border-0 border-b border-[#9ca3af73]r p-2 text-sm" key={col.accessor}>
                   {col?.cell ? col.cell(row) : row[col.accessor]}
                 </td>
               ))}

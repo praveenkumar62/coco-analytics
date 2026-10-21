@@ -8,6 +8,38 @@ const listProducts = (req, res) => {
   });
 }
 
+const productsGroupBy = (req, res) => {
+  const userId = req.params.userId;
+  const groupBy = req.query.groupBy;
+
+  const validGroupBy = ['year', 'month'];
+
+  if (!validGroupBy.includes(groupBy)) {
+    return res.status(400).json({ message: 'Invalid Groupby ' });
+  }
+
+  const groupFunc = groupBy === 'year' ? 'YEAR' : 'MONTH';
+
+  const sql = `
+    SELECT ${groupFunc} (coco_pick) AS ${groupBy},
+    SUM (new_coco) AS total_new_coco,
+    SUM (old_coco) AS total_old_coco,
+    SUM (new_coco * new_coco_cost) AS total_new_coco_cost,
+    SUM (old_coco * old_coco_cost) AS total_old_coco_cost
+    FROM products 
+    WHERE user_id = ?
+    GROUP BY ${groupBy} (coco_pick)
+    ORDER BY ${groupBy} (coco_pick) ASC
+  `;
+
+  db.query(sql, [userId], (err, result) => {
+    if (err) {
+      return res.status(400).json({ message: 'Failed to group products', error: err });
+    }
+    res.status(200).json({ data: result });
+  });
+}
+
 const saveProduct = (req, res) => {
   const userId = req.params.userId;
   const { pickDate, takenDate, oldCount, newCount, oldCost, newCost } = req.body;
@@ -42,8 +74,8 @@ const editProduct = (req, res) => {
 }
 
 const viewProduct = (req, res) => {
-  const id = req.params.id;
-  db.query(`SELECT * FROM products where user_id = ?`, [id], (err, result) => {
+  const userId = req.params.userId;
+  db.query(`SELECT * FROM products where user_id = ?`, [userId], (err, result) => {
     if (err) return res.status(400).json({ message: 'Failed to view product', error: err });
     const final = result.sort((a, b) => (a.coco_taken - b.coco_taken))
     return res.status(200).json({ data: final });
@@ -59,4 +91,4 @@ const deleteProduct = (req, res) => {
   })
 }
 
-module.exports = { saveProduct, listProducts, deleteProduct, editProduct, viewProduct };
+module.exports = { saveProduct, listProducts, deleteProduct, editProduct, viewProduct, productsGroupBy };

@@ -44,8 +44,9 @@ export default function Login() {
   };
 
   return (
-    <div className="w-full py-12">
-      <div className="w-96 shadow-xl bg-gray-50 rounded-md p-4 mx-auto">
+    <section className="w-full py-12 px-5">
+      <h1 className="text-center mb-4 font-bold text-lg">Cocolysis</h1>
+      <div className="w-full sm:w-96 shadow-xl bg-gray-50 rounded-md p-4 mx-auto">
         <div className="mb-4">
           <label htmlFor="username" className="text-xs block mb-1 text-gray-500">
             Username
@@ -77,6 +78,6 @@ export default function Login() {
           Login
         </button>
       </div>
-    </div>
+    </section>
   );
 }

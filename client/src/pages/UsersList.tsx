@@ -42,9 +42,9 @@ export default function UsersList() {
         <img
           src={EditIcon}
           alt="edit"
-          width={24}
-          height={24}
-          style={{ cursor: "pointer" }}
+          width={18}
+          height={18}
+          style={{ cursor: "pointer", maxWidth: 18, marginRight: 10 }}
           onClick={() => setEditUser(row)}
         />
       ),
@@ -56,9 +56,9 @@ export default function UsersList() {
         <img
           src={DeleteIcon}
           alt="delete"
-          width={24}
-          height={24}
-          style={{ cursor: "pointer" }}
+          width={18}
+          height={18}
+          style={{ cursor: "pointer", maxWidth: 18, marginRight: 10 }}
           onClick={() => setDeleteUser(row)}
         />
       ),
@@ -93,13 +93,15 @@ export default function UsersList() {
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold mb-4">Users List</h1>
         <button
-          className="text-sm cursor-pointer px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white mb-4 rounded-md"
+          className="text-sm cursor-pointer px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white mb-4 rounded-md shadow-lg"
           onClick={() => setAddUser(true)}
         >
           Add User +
         </button>
       </div>
-      <Table columns={columns} rows={usersData} />
+      <div className="overflow-x-auto">
+        <Table columns={columns} rows={usersData} />
+      </div>
       {addUser && (
         <AddEditUser
           onClose={() => setAddUser(false)}
